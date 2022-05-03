@@ -1,0 +1,40 @@
+version: "3.3"
+networks:
+  app-network:
+    driver: bridge
+
+
+services:
+  database:
+    image: postgres:11.0-alpine
+    networks:
+      - app-network
+    environment:
+      DEBUG: 'false'
+    env_file:
+      - .env
+
+  app:
+    depends_on:
+      - database
+    networks:
+      - app-network
+    build:
+      context: app
+      dockerfile: ./Dockerfile
+    command: sh ./app/boot.sh
+    env_file:
+      - .env
+    ports:
+      - 8000:8000
+
+  nginx:
+    depends_on:
+      - app
+    build:
+      context: nginx
+      dockerfile: ./Dockerfile
+    restart: unless-stopped
+    networks:
+      - app-network
+
