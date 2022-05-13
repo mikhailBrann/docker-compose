@@ -1,6 +1,10 @@
-FROM nginx
+FROM nginx:1.21-alpine
 
-COPY ./app.conf ./etc/nginx/sites-available/
-COPY ./app.conf ./etc/nginx/sites-enabled/
+RUN mkdir static
 
-CMD ["sudo", "systemctl", "start", "nginx"]
+RUN rm /etc/nginx/conf.d/default.conf
+COPY ./app.conf /etc/nginx/app.conf
+
+
+
+ENTRYPOINT ["nginx", "-g", "daemon off;"]

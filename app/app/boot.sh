@@ -1,5 +1,4 @@
 sleep 10
-
-python ./app/manage.py migrate
-#python ./app/manage.py collectstatic
-python ./app/manage.py runserver 0.0.0.0:8000 --noreload
+cd ./app/
+python manage.py migrate
+gunicorn stocks_products.wsgi --bind 0.0.0.0:8000
