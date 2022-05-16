@@ -25,19 +25,22 @@ services:
     command: sh ./app/boot.sh
     env_file:
       - .env
+    volumes:
+      - static_volume:/app/app/static
     ports:
       - 8000:8000
 
   nginx:
     depends_on:
       - app
-    build:
-      context: nginx
-      dockerfile: ./Dockerfile
+    build: ./nginx
     networks:
       - app-network
     volumes:
-      - ./app/app/static:/static
+      - static_volume:/app/app/static
     ports:
       - 1337:80
+    restart: always
 
+volumes:
+  static_volume:
